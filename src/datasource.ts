@@ -10,10 +10,17 @@ import {
 } from '@grafana/data';
 
 import { MyQuery, MyDataSourceOptions, defaultQuery } from './types';
+import axios from "axios";
 
 export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
+    serverUrl: string;
+    apiKey: string;
+
   constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>) {
     super(instanceSettings);
+
+    this.serverUrl = instanceSettings.jsonData.serverUrl;
+    this.apiKey = instanceSettings.jsonData.apiKey;
   }
 
   async query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
@@ -37,6 +44,12 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   }
 
   async testDatasource() {
+
+      await axios.get(this.serverUrl + "/ping", {
+          headers: {
+              Authorization: this.apiKey
+          }
+      });
     // Implement a health check for your data source.
     return {
       status: 'success',
