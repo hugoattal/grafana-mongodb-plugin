@@ -11,14 +11,14 @@ const { FormField } = LegacyForms;
 type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
 
 export class QueryEditor extends PureComponent<Props> {
-    onQueryCollectionChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const { onChange, query } = this.props;
-        onChange({ ...query, collection: event.target.value });
-    };
-    onQueryIntervalChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const { onChange, query } = this.props;
-        onChange({ ...query, interval: event.target.value });
-    };
+  onQueryCollectionChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { onChange, query } = this.props;
+    onChange({ ...query, collection: event.target.value });
+  };
+  onQueryIntervalChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { onChange, query } = this.props;
+    onChange({ ...query, interval: event.target.value });
+  };
 
   render() {
     const query = defaults(this.props.query, defaultQuery);
@@ -26,19 +26,14 @@ export class QueryEditor extends PureComponent<Props> {
 
     return (
       <div className="gf-form">
-          <FormField
-              labelWidth={8}
-              value={collection || ''}
-              onChange={this.onQueryCollectionChange}
-              label="Collection"
-          />
-          <FormField
-              labelWidth={8}
-              value={interval || ''}
-              onChange={this.onQueryIntervalChange}
-              label="Interval"
-              placeholder="1h"
-          />
+        <FormField labelWidth={8} value={collection || ''} onChange={this.onQueryCollectionChange} label="Collection" />
+        <FormField
+          labelWidth={8}
+          value={interval || ''}
+          onChange={this.onQueryIntervalChange}
+          label="Interval"
+          placeholder="1h"
+        />
       </div>
     );
   }
