@@ -26,6 +26,14 @@ export class ConfigEditor extends PureComponent<Props, State> {
         };
         onOptionsChange({ ...options, jsonData });
     };
+    onDatabaseChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { onOptionsChange, options } = this.props;
+        const jsonData = {
+            ...options.jsonData,
+            database: event.target.value,
+        };
+        onOptionsChange({ ...options, jsonData });
+    };
 
   render() {
     const { options } = this.props;
@@ -50,6 +58,16 @@ export class ConfigEditor extends PureComponent<Props, State> {
                   inputWidth={20}
                   onChange={this.onApiChange}
                   value={jsonData.apiKey || ''}
+                  placeholder=""
+              />
+          </div>
+          <div className="gf-form">
+              <FormField
+                  label="Database"
+                  labelWidth={6}
+                  inputWidth={20}
+                  onChange={this.onDatabaseChange}
+                  value={jsonData.database || ''}
                   placeholder=""
               />
           </div>

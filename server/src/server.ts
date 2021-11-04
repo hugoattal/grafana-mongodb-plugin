@@ -2,6 +2,7 @@ import * as Fastify from "fastify";
 import { config } from "dotenv";
 import * as Database from "./database";
 import { register as PingHandler } from "@/ping";
+import { register as DatasourceHandler } from "@/datasource";
 import fastifyCors from "fastify-cors";
 import middiePlugin from "middie";
 import createHttpError from "http-errors";
@@ -31,6 +32,7 @@ async function init() {
     })
 
     server.register(PingHandler);
+    server.register(DatasourceHandler);
 
     return server;
 }

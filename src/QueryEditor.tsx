@@ -11,39 +11,34 @@ const { FormField } = LegacyForms;
 type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
 
 export class QueryEditor extends PureComponent<Props> {
-  onQueryTextChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { onChange, query } = this.props;
-    onChange({ ...query, queryText: event.target.value });
-  };
-
-  onConstantChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { onChange, query, onRunQuery } = this.props;
-    onChange({ ...query, constant: parseFloat(event.target.value) });
-    // executes the query
-    onRunQuery();
-  };
+    onQueryCollectionChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { onChange, query } = this.props;
+        onChange({ ...query, collection: event.target.value });
+    };
+    onQueryIntervalChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { onChange, query } = this.props;
+        onChange({ ...query, interval: event.target.value });
+    };
 
   render() {
     const query = defaults(this.props.query, defaultQuery);
-    const { queryText, constant } = query;
+    const { collection, interval } = query;
 
     return (
       <div className="gf-form">
-        <FormField
-          width={4}
-          value={constant}
-          onChange={this.onConstantChange}
-          label="Constant"
-          type="number"
-          step="0.1"
-        />
-        <FormField
-          labelWidth={8}
-          value={queryText || ''}
-          onChange={this.onQueryTextChange}
-          label="Query Text"
-          tooltip="Not used yet"
-        />
+          <FormField
+              labelWidth={8}
+              value={collection || ''}
+              onChange={this.onQueryCollectionChange}
+              label="Collection"
+          />
+          <FormField
+              labelWidth={8}
+              value={interval || ''}
+              onChange={this.onQueryIntervalChange}
+              label="Interval"
+              placeholder="1h"
+          />
       </div>
     );
   }

@@ -1,18 +1,20 @@
-import { DataQuery, DataSourceJsonData } from '@grafana/data';
+import { DataQuery, DataSourceJsonData } from "@grafana/data";
 
 export interface MyQuery extends DataQuery {
-  queryText?: string;
-  constant: number;
+    collection: string;
+    interval: string;
 }
 
 export const defaultQuery: Partial<MyQuery> = {
-  constant: 6.5,
+    interval: "1h",
+    collection: "default"
 };
 
 /**
  * These are options configured for each DataSource instance
  */
 export interface MyDataSourceOptions extends DataSourceJsonData {
-  serverUrl: string;
-  apiKey: string;
+    serverUrl: string;
+    apiKey: string;
+    database: string;
 }
