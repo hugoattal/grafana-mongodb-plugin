@@ -53,9 +53,9 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
           }
         );
 
-        const response = request.data as Array<{ time: number; value: number }>;
-
         if (query.type === 'time') {
+          const response = request.data as Array<{ time: number; value: number }>;
+
           return new MutableDataFrame({
             refId: query.refId,
             fields: [
@@ -66,6 +66,8 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
         }
 
         if (query.type === 'table') {
+          const response = request.data as Array<{ time: number; [key: string]: any }>;
+
           const fields = [
             { name: 'Time', values: response.map((bucket) => new Date(bucket.time)), type: FieldType.time },
           ] as Array<FieldDTO>;
@@ -83,6 +85,11 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
             fields,
           });
         }
+
+        return new MutableDataFrame({
+          refId: query.refId,
+          fields: [],
+        });
       })
     );
 
