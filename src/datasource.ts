@@ -7,6 +7,7 @@ import {
   DataSourceInstanceSettings,
   MutableDataFrame,
   FieldType,
+  FieldDTO,
 } from '@grafana/data';
 
 import { MyQuery, MyDataSourceOptions, defaultQuery } from './types';
@@ -32,7 +33,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
 
     // Return a constant for each query.
     const data = await Promise.all(
-      options.targets.map(async target => {
+      options.targets.map(async (target) => {
         const query = defaults(target, defaultQuery);
 
         const request = await axios.post(
@@ -52,15 +53,36 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
           }
         );
 
-        const response = request.data as Array<{ time: Date; value: number }>;
+        const response = request.data as Array<{ time: number; value: number }>;
 
-        return new MutableDataFrame({
-          refId: query.refId,
-          fields: [
-            { name: 'Time', values: response.map(bucket => bucket.time), type: FieldType.time },
-            { name: 'Value', values: response.map(bucket => bucket.value), type: FieldType.number },
-          ],
-        });
+        if (query.type === 'time') {
+          return new MutableDataFrame({
+            refId: query.refId,
+            fields: [
+              { name: 'Time', values: response.map((bucket) => new Date(bucket.time)), type: FieldType.time },
+              { name: 'Value', values: response.map((bucket) => bucket.value), type: FieldType.number },
+            ],
+          });
+        }
+
+        if (query.type === 'table') {
+          const fields = [
+            { name: 'Time', values: response.map((bucket) => new Date(bucket.time)), type: FieldType.time },
+          ] as Array<FieldDTO>;
+
+          for (const field of query.fields) {
+            fields.push({
+              name: field,
+              values: response.map((bucket) => bucket[field]),
+              type: FieldType.string,
+            });
+          }
+
+          return new MutableDataFrame({
+            refId: query.refId,
+            fields,
+          });
+        }
       })
     );
 
